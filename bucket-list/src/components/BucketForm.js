@@ -4,14 +4,14 @@ function BucketForm(props) {
   const [input, setInput] = useState('');
   let [eagerness, setEagerness] = useState('');
 
-  // TODO: Use this array in the return statement below
-  const eagernessLevel = ['high', 'medium', 'low']
+  const eagernessLevel = ['Must do', 'Want to do', 'Take it or leave it']
+  const eagernessClassNames = {'Must do': 'high', 'Want to do': 'medium', 'Take it or leave it': 'low'};
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
     if (!eagerness) {
-      eagerness = 'low';
+      eagerness = 'Take it or leave it';
     }
 
     props.onSubmit({
@@ -28,6 +28,10 @@ function BucketForm(props) {
     setInput(e.target.value);
   };
 
+  const handleEagernessChange = (level) => {
+    setEagerness(level);
+  };
+
   // First we check to see if "edit" prop exists. If not, we render the normal form
   // If the prop "edit" exists, we know to render the update form instead
   return !props.edit ? (
@@ -42,46 +46,50 @@ function BucketForm(props) {
           onChange={handleChange}
         ></input>
         <div className="dropdown">
-          <button className={`dropbtn ${eagerness}`}>
+          <button className={`dropbtn ${eagernessClassNames[eagerness]}`}>
             {eagerness || 'Priority'}
           </button>
           <div className="dropdown-content">
-            {/* TODO: Add an onClick event that will set the corresponding eagerness level from the `eagernessLevel` array */}
-            <p onClick={}>Must do</p>
-            <p onClick={}>Want to do</p>
-            <p onClick={}>Take it or leave it</p>
-          </div>
-        </div>
-        <button className="bucket-button">Add bucket list item</button>
-      </form>
-    </div>
-  ) : (
-    <div>
-      <h3>Update entry: {props.edit.value}</h3>
-      <form className="bucket-form" onSubmit={handleSubmit}>
-        <input
-          type="text"
-          placeholder={props.edit.value}
-          value={input}
-          name="text"
-          className="bucket-input"
-          onChange={handleChange}
-        ></input>
-        <div className="dropdown">
-          <button className={`dropbtn ${eagerness}`}>
-            {eagerness || 'Priority'}
-          </button>
-          <div className="dropdown-content">
-            {/* TODO: Add an onClick event that will set the corresponding eagerness level from the `eagernessLevel` array */}
-            <p onClick={}>Must do</p>
-            <p onClick={}>Want to do</p>
-            <p onClick={}>Take it or leave it</p>
-          </div>
-        </div>
-        <button className="bucket-button">Update</button>
-      </form>
-    </div>
-  );
-}
+            {eagernessLevel.map((level, index) => (
+              <p key={index} onClick={() => handleEagernessChange(level)}>
+                {level}
+              </p>
+            )
+            )}
+            </div>
+            </div>
+            <button className="bucket-button">Add bucket list item</button>
+            </form>
+            </div>
+            ) : (
+            <div>
+              <h3>Update entry: {props.edit.value}</h3>
+              <form className="bucket-form" onSubmit={handleSubmit}>
+                <input
+                  type="text"
+                  placeholder={props.edit.value}
+                  value={input}
+                  name="text"
+                  className="bucket-input"
+                  onChange={handleChange}
+                ></input>
+                <div className="dropdown">
+                  <button className={`dropbtn ${eagernessClassNames[eagerness]}`}>
+                    {eagerness || 'Priority'}
+                  </button>
+                  <div className="dropdown-content">
+                    {eagernessLevel.map((level, index) => (
+                      <p key={index} onClick={() => handleEagernessChange(level)}>
+                        {level}
+                      </p>
+                    ))}
+                  </div>
+                </div>
+                <button className="bucket-button">Update</button>
+              </form>
+            </div>
+            );
+            }
+
 
 export default BucketForm;
